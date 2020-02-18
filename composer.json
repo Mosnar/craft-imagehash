@@ -1,0 +1,44 @@
+{
+    "name": "venveo/craft-imagehash",
+    "description": "Compute image similarity",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "image hash"
+    ],
+    "support": {
+        "docs": "https://github.com/venveo/image-hash/blob/master/README.md",
+        "issues": "https://github.com/venveo/image-hash/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Venveo",
+            "homepage": "https://www.venveo.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.1.0",
+        "jenssegers/imagehash": "^0.6.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "venveo\\imagehash\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Image Hash",
+        "handle": "image-hash",
+        "hasCpSettings": true,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/venveo/image-hash/master/CHANGELOG.md",
+        "components": {
+            "imageHash": "venveo\\imagehash\\services\\ImageHash"
+        },
+        "class": "venveo\\imagehash\\ImageHash"
+    }
+}
