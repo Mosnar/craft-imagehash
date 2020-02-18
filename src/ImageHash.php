@@ -63,15 +63,6 @@ class ImageHash extends Plugin
         self::$plugin = $this;
 
         Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                }
-            }
-        );
-
-        Event::on(
             Asset::class,
             Asset::EVENT_DEFINE_BEHAVIORS,
             function (DefineBehaviorsEvent $e) {
@@ -85,6 +76,10 @@ class ImageHash extends Plugin
                 /** @var Asset $asset */
                 $asset = $e->sender;
                 if (!$asset->getBehavior('imageHash')) {
+                    return;
+                }
+                if ($asset->kind !== Asset::KIND_IMAGE ) {
+                    $asset->detachBehavior('imageHash');
                     return;
                 }
 
@@ -102,7 +97,7 @@ class ImageHash extends Plugin
             }
             $hashRecord = \venveo\imagehash\records\ImageHash::find()->where(['hash' => $asset->imageHash])->one();
             if ($hashRecord) {
-                $asset->addError('hash', 'An image similar to that already exists on element: '. $hashRecord->assetId);
+                $asset->addError('imageHash', 'An image similar to that already exists on element: '. $hashRecord->assetId);
             }
         });
 
@@ -111,6 +106,9 @@ class ImageHash extends Plugin
             function (\yii\base\ModelEvent $e) {
                 /** @var Asset $asset */
                 $asset = $e->sender;
+                if ($asset->scenario === Asset::SCENARIO_FILEOPS || $asset->scenario === Asset::SCENARIO_CREATE) {
+                    return;
+                }
 
                 if (!$asset->getBehavior('imageHash')) {
                     return;
@@ -125,15 +123,6 @@ class ImageHash extends Plugin
                     Craft::dd($record->getErrors());
                 }
             }
-        );
-
-        Craft::info(
-            Craft::t(
-                'image-hash',
-                '{name} plugin loaded',
-                ['name' => $this->name]
-            ),
-            __METHOD__
         );
     }
 
